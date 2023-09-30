@@ -21,6 +21,7 @@ import (
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/lists/id/items [post]
+
 func (h *Handler) createItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

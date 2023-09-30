@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.signIn)
 	}
 
-	api := router.Group("/api", h.userIdentity)
+	api := router.Group("/api")
 	{
 		lists := api.Group("/lists")
 		{
@@ -53,6 +53,25 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			items.DELETE("/id", h.deleteItem)
 		}
 	}
+
+	apiv1 := router.Group("api/v1")
+	book := apiv1.Group("/book")
+	{
+		book.POST("/", h.CreateBook) // create book
+		book.GET("/list", h.GetBookList) // get book list
+		book.GET("/", h.GetBookById) // get book by id
+		book.PUT("/", h.UpdateBook) // update book
+		book.DELETE("/", h.DeleteBook) // delete book
+	}
+	genr := apiv1.Group("/genr")
+		{
+			genr.POST("/", h.creteGenre)    // create genre
+			genr.GET("/", h.GetGenre)    // get genre
+			genr.GET("/id", h.GetGenreById) // get genre by id
+			genr.PUT("/", h.UpdateGenre)    // update genre
+			genr.DELETE("/", h.DeleteGenre) // delete genre
+		}
+
 
 	return router
 }

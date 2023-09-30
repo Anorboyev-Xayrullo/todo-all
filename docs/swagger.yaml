@@ -1,5 +1,19 @@
 basePath: /
 definitions:
+  handler.GetBookListResponse:
+    properties:
+      book:
+        items:
+          $ref: '#/definitions/model.Books'
+        type: array
+    type: object
+  handler.GetGenreResponse:
+    properties:
+      genre:
+        items:
+          $ref: '#/definitions/model.Genre'
+        type: array
+    type: object
   handler.errorResponse:
     properties:
       message:
@@ -25,6 +39,57 @@ definitions:
   handler.statusResponse:
     properties:
       status:
+        type: string
+    type: object
+  model.Books:
+    properties:
+      author:
+        type: string
+      description:
+        type: string
+      generid:
+        type: integer
+      id:
+        type: integer
+      language:
+        type: string
+      name:
+        type: string
+      number:
+        type: integer
+      type:
+        type: boolean
+      year:
+        type: string
+    type: object
+  model.Genre:
+    properties:
+      genre:
+        type: string
+      id:
+        type: integer
+    type: object
+  model.SuccessData:
+    properties:
+      data: {}
+    type: object
+  model.UpdateGenreInput:
+    properties:
+      author:
+        type: string
+      description:
+        type: string
+      genre:
+        type: string
+      language:
+        type: string
+      name:
+        type: string
+      number:
+        type: integer
+      type:
+        type: boolean
+      year:
         type: string
     type: object
   todo.ListItem:
@@ -459,23 +524,96 @@ paths:
       summary: Get All Items
       tags:
       - items
-    post:
+  /api/v1/book:
+    delete:
       consumes:
       - application/json
-      description: create todo item
-      operationId: create-item
+      description: delete book
+      operationId: delete book
       parameters:
-      - description: createItem
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/todo.TodoItem'
       - description: id
         in: query
         name: id
         required: true
         type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Book
+      tags:
+      - book
+    get:
+      consumes:
+      - application/json
+      description: get book by id
+      operationId: get-book-by-id
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - book
+    post:
+      consumes:
+      - application/json
+      description: create book
+      operationId: create-book
+      parameters:
+      - description: book info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Books'
       produces:
       - application/json
       responses:
@@ -501,9 +639,286 @@ paths:
             $ref: '#/definitions/handler.errorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Create todo item
+      summary: Create Book
       tags:
-      - items
+      - book
+    put:
+      consumes:
+      - application/json
+      description: Update Book
+      operationId: update book
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: book info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Books'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update Book
+      tags:
+      - book
+  /api/v1/book/list/:
+    get:
+      consumes:
+      - application/json
+      description: get book list
+      operationId: get-book-lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetBookListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Book
+      tags:
+      - book
+  /api/v1/genr/:
+    delete:
+      consumes:
+      - application/json
+      description: delete genre
+      operationId: delete genr
+      parameters:
+      - description: ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete genre
+      tags:
+      - genre
+    get:
+      consumes:
+      - application/json
+      description: get genre
+      operationId: get-genr
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetGenreResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Genre
+      tags:
+      - genre
+    post:
+      consumes:
+      - application/json
+      description: create genre
+      operationId: create-genr
+      parameters:
+      - description: genre info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Genre'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create genre
+      tags:
+      - genre
+    put:
+      consumes:
+      - application/json
+      description: update genre
+      operationId: update genr
+      parameters:
+      - description: ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: book info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateGenreInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update genre
+      tags:
+      - genre
+  /api/v1/genr/id:
+    get:
+      consumes:
+      - application/json
+      description: get genre by id
+      operationId: get-genr-by-id
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Genre By id
+      tags:
+      - genre
   /auth/sign-in:
     post:
       consumes:

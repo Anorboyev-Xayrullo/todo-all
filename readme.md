@@ -22,3 +22,29 @@ go install github.com/swaggo/swag/cmd/swag@latest
 ```azure
 swag init -g cmd/main.go 
 ```
+
+
+
+
+
+
+func (repo *RoomWriterDB) CreateRoom(room model.CreateRoom) (err error) {
+	loggers := repo.loggers
+	db := repo.db
+	row, err := db.Exec(CreateRoomQuery, room.Title, room.Description,
+	 room.RoomNumber, room.CloseTime, room.OpenTime)
+	if err != nil {
+	 loggers.Error(err)
+	 return err
+	}
+	rowAffected, err := row.RowsAffected()
+	if err != nil {
+	 loggers.Error(err)
+	 return err
+	}
+	if rowAffected == 0 {
+	 loggers.Error(ErrorNoRowsAffected)
+	 return ErrorNoRowsAffected
+	}
+	return nil
+   }
